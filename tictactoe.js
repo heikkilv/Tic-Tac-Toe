@@ -1,4 +1,4 @@
-var squares = function() {
+var squares = function () {
   var nx = 10;
   var ny = 10;
   var nwin = 5;
@@ -87,8 +87,8 @@ var squares = function() {
           } else if (extraSpaces === 1 && rightExtra && connected) {
             tiles[tiles.length] = id + (nEnd+1) * (dx[d] + dy[d] * nx);
           } else {
-            for (var i = 0; i < emptyTiles.length; ++i) {
-              tiles[tiles.length] = emptyTiles[i];
+            for (var j = 0; j < emptyTiles.length; ++j) {
+              tiles[tiles.length] = emptyTiles[j];
             }
           }
         }
@@ -98,7 +98,7 @@ var squares = function() {
     return tiles;
   };
 
-  var findEmptySpaces = function(nearCenter = false) {
+  var findEmptySpaces = function(nearCenter) {
     var tiles = [];
     var start_x = (nearCenter) ? nx/2 - 3 : 0;
     var start_y = (nearCenter) ? ny/2 - 3 : 0;
@@ -154,7 +154,7 @@ var squares = function() {
     tiles = tiles.concat(checkForMove(1, otherMark, false, 0));
     if (tiles.length > 0) return tiles;
     if (moves === 0) return findEmptySpaces(true);
-    else return findEmptySpaces();
+    else return findEmptySpaces(false);
   };
 
   return {
@@ -320,7 +320,7 @@ function makeAIMove() {
     $("#" + possibleTiles[i]).addClass("possible");
   }
   */
-};
+}
 
 var game = {};
 var score = 0;
@@ -359,7 +359,7 @@ function restartGame(clearGameArea) {
   startTime = Date.parse(new Date());
   makeAIMove();
   updateScore();
-};
+}
 
 $(function() {
   createGameButtons();
@@ -444,15 +444,15 @@ function createGameArea(nx, ny) {
     squareText += "</tr>";
     $("#GameArea").append(squareText);
   }
-};
+}
 
 function createGameButtons() {
   $("#GameButtons").append('<button id="info" class="button_left">Score Info</button>');
-  $("#GameButtons").append('<button id="restart" class="button_left" onClick="restartGame(true)">Restart Game</button>')
+  $("#GameButtons").append('<button id="restart" class="button_left" onClick="restartGame(true)">Restart Game</button>');
   $("#GameButtons").append('<button id="load_state">Load Game</button>');
   $("#GameButtons").append('<button id="save_state">Save Game</button>');
   $("#GameButtons").append('<button id="submit_score" class="button_right">Submit Score</button>');
-};
+}
 
 function checkForGameEnd() {
   var tiles = game.checkForWin();
@@ -496,27 +496,27 @@ function checkForGameEnd() {
   else if (!game.isGameStarted()) {
     console.log("Tie game");
 
+    var tieTime = Date.parse(new Date()) - startTime;
+    var tieSeconds = Math.floor(tieTime/1000);
     var tieMoves = Math.floor(game.getMoves() / 2) + 1;
-    var seconds = Math.floor(time/1000);
-    var winnerMoves = Math.floor(game.getMoves() / 2);
-    var endText = "Game ended in a tie after " + tieMoves + " moves";
+    var tieEndText = "Game ended in a tie after " + tieMoves + " moves";
 
     score += tieScore;
     if (loaded) {
-      endText += "!";
+      tieEndText += "!";
     } else {
-      if (seconds > 0 && seconds <= maxTimeScore) {
-        score += Math.floor(maxTimeScore - seconds);
+      if (tieSeconds > 0 && tieSeconds <= maxTimeScore) {
+        score += Math.floor(maxTimeScore - tieSeconds);
       }
-      endText += " and " + seconds + " seconds!";
+      tieEndText += " and " + tieSeconds + " seconds!";
     }
-    $("#GameEndInfo").text(endText);
+    $("#GameEndInfo").text(tieEndText);
     updateScore();
     return true;
   } else {
     return false;
   }
-};
+}
 
 function makeHumanMove(id) {
   if (game.setMark(id)) {
@@ -534,11 +534,11 @@ function makeHumanMove(id) {
       $("#submit_score").attr('disabled', false);
     }
   }
-};
+}
 
 function updateScore() {
   $("#GameScore").text("Score: " + score);
-};
+}
 
 function setGameState(gameState) {
   loaded = true;
