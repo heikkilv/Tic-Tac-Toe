@@ -1,0 +1,95 @@
+body
+{
+  min-width: 510px;
+  min-height: 610px;
+}
+
+#GameHeader
+{
+  width: 500px;
+  text-align: center;
+  font-size: 20px;
+}
+
+#GameTitle
+{
+  font-size: 28px;
+  font-weight: bold;
+}
+
+#GameArea
+{
+  width: 500px;
+  height: 500px;
+}
+
+.square
+{
+  border-style: solid;
+  border-width: 1px;
+  width: 10%;
+  max-width: 10%;
+  height: 10%;
+  max-height: 10%;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 30px;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.AI
+{
+  color: black;
+  border-color: black;
+}
+
+.player
+{
+  color: red;
+  border-color: black;
+}
+
+.possible
+{
+  border-color: green;
+}
+
+.win
+{
+  background-color: blue;
+}
+
+#GameInfo
+{
+  width: 500px;
+}
+
+#GameScore
+{
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#GameEndInfo
+{
+  font-size: 20px;
+  font-weight: bold;
+  float: right;
+}
+
+#GameButtons
+{
+  width: 500px;
+  text-align: center;
+}
+
+.button_left
+{
+  float: left;
+}
+
+.button_right
+{
+  float: right;
+}
