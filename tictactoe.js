@@ -1,3 +1,4 @@
+// A class like function to handle the logic of the game board.
 var squares = function () {
   var nx = 10;
   var ny = 10;
@@ -10,6 +11,7 @@ var squares = function () {
   var moves = 0;
   var gameOn = false;
 
+  // Updates which mark is used for the next move.
   var setNextMark = function() {
     if (nextMark === x_mark) {
       nextMark = o_mark;
@@ -18,6 +20,13 @@ var squares = function () {
     }
   };
 
+  // Checks squares are available for the next moves. Goes through each
+  // possible 5-squares (lines) that can be used to win the game.
+  // Parameters: nCheck = how many marks are required to be in the line
+  //             mark = which mark is the one the function looks for
+  //             connected = are the current marks required to be connected
+  //             extraSpaces = how many extra spaces are required around the line (0, 1 or 2)
+  // Return a list of possible squares.
   var checkForMove = function(nCheck, mark, connected, extraSpaces) {
     if (moves < nCheck) {
       return [];
@@ -98,6 +107,8 @@ var squares = function () {
     return tiles;
   };
 
+  // Returns a list of all empty squares.
+  // nearCenter = whether to consider only squares near the center of the table.
   var findEmptySpaces = function(nearCenter) {
     var tiles = [];
     var start_x = (nearCenter) ? nx/2 - 3 : 0;
@@ -116,6 +127,8 @@ var squares = function () {
     return tiles;
   };
 
+  // The AI logic that determines which are the suggested squares for the.
+  // next move. Returns a list of those squares.
   var calculatePossibleMove = function() {
     if (!gameOn) {
       return [];
@@ -158,6 +171,7 @@ var squares = function () {
   };
 
   return {
+    // Starts the game.
     startGame: function() {
       moves = 0;
       nextMark = x_mark;
@@ -180,6 +194,7 @@ var squares = function () {
       return ny;
     },
 
+    // Tries to set a mark on the square identified by id.
     setMark: function(id) {
       if (gameOn && id >= 0 && id < nx * ny && marks[id] === empty_mark) {
         marks[id] = nextMark;
@@ -194,6 +209,7 @@ var squares = function () {
       }
     },
 
+    // Returns which mark is on the square identified by id.
     getMark: function(id) {
       if (id < 0 || id >= nx * ny) {
         return empty_mark;
@@ -206,6 +222,7 @@ var squares = function () {
       return moves;
     },
 
+    // Returns the game state. Used for saving the game.
     getGameState: function() {
       var state = "";
       for (var y = 0; y < ny; ++y) {
@@ -221,6 +238,7 @@ var squares = function () {
       return state;
     },
 
+    // Sets the game to the givenn state. Used for loading the game.
     setState: function(state) {
       this.startGame();
 
@@ -249,6 +267,8 @@ var squares = function () {
       }
     },
 
+    // Returns a boolean value that tells if there is a winning condition in
+    // the current game.
     checkForWin: function() {
       if (moves < nwin) {
         return [];
@@ -298,6 +318,7 @@ var squares = function () {
   };
 };
 
+// Handles the AI move.
 function makeAIMove() {
   var possibleTiles = game.getPossibleMove();
   var index = Math.floor(Math.random() * possibleTiles.length);
@@ -334,6 +355,7 @@ var loseScore = 0;
 var loadScore = -100;
 var maxTimeScore = 120;
 
+// Restarts the game.
 function restartGame(clearGameArea) {
   game = squares();
   score = 0;
@@ -365,6 +387,7 @@ $(function() {
   createGameButtons();
   restartGame(false);
 
+  // Handles submitting the high score to the parent window.
   $("#submit_score").click( function () {
     var msg = {
       "messageType": "SCORE",
@@ -375,6 +398,7 @@ $(function() {
     $("#submit_score").attr('disabled', true);
   });
 
+  // Handles saving the game state.
   $("#save_state").click( function () {
     var msg = {
       "messageType": "SAVE",
@@ -385,6 +409,7 @@ $(function() {
     window.parent.postMessage(msg, "*");
   });
 
+  // Handles request for loading the game state.
   $("#load_state").click( function () {
     var msg = {
       "messageType": "LOAD_REQUEST",
@@ -392,6 +417,7 @@ $(function() {
     window.parent.postMessage(msg, "*");
   });
 
+  // Handles showing an alert popup that tells how the scoring works.
   $("#info").click( function () {
     var infoText = "Scoring system:\n\n";
     infoText += "1 move:\t\t";
@@ -415,6 +441,7 @@ $(function() {
     alert(infoText);
   });
 
+  // Handles received message from the parent window for loading the game state.
   window.addEventListener("message", function(evt) {
     if(evt.data.messageType === "LOAD") {
       setGameState(evt.data.gameState);
@@ -423,6 +450,7 @@ $(function() {
     }
   });
 
+  // Sends the required window size to the parent window.
   var message =  {
     messageType: "SETTING",
     options: {
@@ -433,6 +461,7 @@ $(function() {
   window.parent.postMessage(message, "*");
 });
 
+// Fills the table shows the game to the user.
 function createGameArea(nx, ny) {
   for (var y = 0; y < ny; ++y) {
     var squareText = "<tr>";
@@ -446,6 +475,7 @@ function createGameArea(nx, ny) {
   }
 }
 
+// Creates the game buttons.
 function createGameButtons() {
   $("#GameButtons").append('<button id="info" class="button_left">Score Info</button>');
   $("#GameButtons").append('<button id="restart" class="button_left" onClick="restartGame(true)">Restart Game</button>');
@@ -454,6 +484,7 @@ function createGameButtons() {
   $("#GameButtons").append('<button id="submit_score" class="button_right">Submit Score</button>');
 }
 
+// Checks for and handles if needed the end game event.
 function checkForGameEnd() {
   var tiles = game.checkForWin();
   if (tiles.length > 0) {
@@ -467,6 +498,7 @@ function checkForGameEnd() {
     var winnerMoves = Math.floor(game.getMoves() / 2);
     var endText = "";
 
+    // Checks whether the winner was AI.
     if (game.getMark(tiles[0]) === "X") {
       score += loseScore;
       endText = "AI won in " + (winnerMoves+1) + " moves";
@@ -476,6 +508,7 @@ function checkForGameEnd() {
         endText += " and " + seconds + " seconds!";
       }
     }
+    // The winner was the player.
     else {
       score += winScore;
       endText = "You won in " + winnerMoves + " moves";
@@ -493,6 +526,7 @@ function checkForGameEnd() {
     $("#GameEndInfo").text(endText);
     return true;
   }
+  // The game ended in a tie.
   else if (!game.isGameStarted()) {
     console.log("Tie game");
 
@@ -518,6 +552,7 @@ function checkForGameEnd() {
   }
 }
 
+// Handles making the plaer move.
 function makeHumanMove(id) {
   if (game.setMark(id)) {
     $("#" + id).text(game.getMark(id));
@@ -540,6 +575,7 @@ function updateScore() {
   $("#GameScore").text("Score: " + score);
 }
 
+// Helper function to handle loading a game state.
 function setGameState(gameState) {
   loaded = true;
   game.setState(gameState.state);
