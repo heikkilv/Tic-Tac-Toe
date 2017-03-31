@@ -426,8 +426,8 @@ $(function() {
   var message =  {
     messageType: "SETTING",
     options: {
-    	"width": 520,
-      "height": 640
+    	"width": 530,
+      "height": 650
     }
   };
   window.parent.postMessage(message, "*");
