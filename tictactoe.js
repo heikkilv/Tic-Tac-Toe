@@ -420,24 +420,25 @@ $(function() {
   // Handles showing an alert popup that tells how the scoring works.
   $("#info").click( function () {
     var infoText = "Scoring system:\n\n";
-    infoText += "1 move:\t\t";
-    if (moveScore > 0) infoText +="+";
+    infoText += "1 move:          ";
+    if (moveScore > 0) infoText += "+";
     infoText += moveScore + " points\n\n";
-    infoText += "winner:\t\t";
-    if (winScore > 0) infoText +="+";
+    infoText += "winner:           ";
+    if (winScore > 0) infoText += "+";
     infoText += winScore + " points\n";
-    infoText += "tie game:\t\t";
-    if (tieScore > 0) infoText +="+";
+    infoText += "tie game:        ";
+    if (tieScore > 0) infoText += "+";
     infoText += tieScore + " points\n";
-    infoText += "loser:\t\t";
-    if (loseScore > 0) infoText +="+";
+    infoText += "loser:               ";
+    if (loseScore > 0) infoText += "+";
     infoText += loseScore + " points\n\n";
-    infoText += "game loaded:\t";
-    if (loadScore > 0) infoText +="+";
+    infoText += "game loaded:  ";
+    if (loadScore > 0) infoText += "+";
     infoText += loadScore + " points\n\n";
-    infoText += "time:\t\t+(" + maxTimeScore + "-s) points\n";
-    infoText += " (timescore will only be added if it is positive\n";
-    infoText += "  and the game was not loaded)";
+    infoText += "time:                +(" + maxTimeScore + "-s) points\n";
+    infoText += " (s is time in seconds, timescore will only be added\n";
+    infoText += "  if it is positive and the game was not loaded)";
+
     alert(infoText);
   });
 
@@ -454,7 +455,7 @@ $(function() {
   var message =  {
     messageType: "SETTING",
     options: {
-    	"width": 530,
+      "width": 530,
       "height": 650
     }
   };
@@ -532,8 +533,8 @@ function checkForGameEnd() {
 
     var tieTime = Date.parse(new Date()) - startTime;
     var tieSeconds = Math.floor(tieTime/1000);
-    var tieMoves = Math.floor(game.getMoves() / 2) + 1;
-    var tieEndText = "Game ended in a tie after " + tieMoves + " moves";
+    var tieMoves = Math.floor(game.getMoves() / 2);
+    var tieEndText = "Tie game after " + tieMoves + " moves";
 
     score += tieScore;
     if (loaded) {
