@@ -238,7 +238,7 @@ var squares = function () {
       return state;
     },
 
-    // Sets the game to the givenn state. Used for loading the game.
+    // Sets the game to the given state. Used for loading the game.
     setState: function(state) {
       this.startGame();
 
@@ -553,7 +553,7 @@ function checkForGameEnd() {
   }
 }
 
-// Handles making the plaer move.
+// Handles making the player move.
 function makeHumanMove(id) {
   if (game.setMark(id)) {
     $("#" + id).text(game.getMark(id));
